@@ -75,10 +75,13 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
+    
     // Update height
     CGRect barFrame = self.frame;
     barFrame.size.height = [self interpolateFromValue:self.maximumBarHeight toValue:self.minimumBarHeight withProgress:self.progress];
+    
+    [NSNotificationCenter.defaultCenter postNotificationName:@"UpdateContentInset" object:self];
+    
     self.frame = barFrame;
     
     if(self.behaviorDefiner && self.behaviorDefiner.isElasticMaximumHeightAtTop)
@@ -118,13 +121,13 @@
         }
         
     }];
-	
-	
-	if ([[UIDevice currentDevice].systemVersion compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending) {
-		// iOS 7
-		// Fixes crash https://github.com/bryankeller/BLKFlexibleHeightBar/issues/4
-		[self layoutIfNeeded];
-	}
+    
+    
+    if ([[UIDevice currentDevice].systemVersion compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending) {
+        // iOS 7
+        // Fixes crash https://github.com/bryankeller/BLKFlexibleHeightBar/issues/4
+        [self layoutIfNeeded];
+    }
 }
 
 - (void)applyFloorLayoutAttributes:(BLKFlexibleHeightBarSubviewLayoutAttributes *)floorLayoutAttributes ceilingLayoutAttributes:(BLKFlexibleHeightBarSubviewLayoutAttributes *)ceilingLayoutAttributes toSubview:(UIView *)subview withFloorProgress:(CGFloat)floorProgress ceilingProgress:(CGFloat)ceilingProgress;
@@ -140,7 +143,7 @@
         denominator = ceilingProgress-floorProgress;
     }
     CGFloat relativeProgress = numerator/denominator;
-
+    
     
     // Interpolate CA3DTransform
     CATransform3D transform3D;
